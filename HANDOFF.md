@@ -2,7 +2,22 @@
 
 ## 🚀 PRODUCTION : https://ia-muscu.vercel.app (depuis le 2026-07-05)
 
+## ⚙️ Config Supabase Dashboard à faire par Synnheal (5 min, une fois)
+Le projet `zmpwucqbzgylmzixjyqf` est hors org SYNN → inaccessible par l'agent. Dans le Dashboard :
+1. **Authentication → URL Configuration** : Site URL = `https://ia-muscu.vercel.app` ; Redirect URLs : ajouter `https://ia-muscu.vercel.app/auth/confirm` (+ `http://localhost:3000/auth/confirm` pour le dev).
+2. **Authentication → Emails → Reset Password** : coller `emails/reset-password.html` — sujet : `🔧 Nouveau mot de passe — La Forge`.
+3. (Optionnel) **Magic Link / Confirm signup** : coller `emails/magic-link.html` — sujet : `🔥 Ta clé pour entrer dans La Forge` (inutilisé tant que l'auth reste par mot de passe, mais prêt).
+
 ## Changelog
+
+### 2026-07-05 (soir) — Flux « mot de passe oublié » + emails stylés
+- **Constat** : auth par mot de passe = aucun email au quotidien, MAIS aucun flux de récupération → mdp oublié = coincé. Corrigé :
+  - `/forgot` (public, ajouté aux PUBLIC_PATHS du proxy) : `resetPasswordForEmail` avec redirectTo `/auth/confirm?next=/reset` ; message générique (ne révèle pas si l'email existe).
+  - `/auth/confirm` : accepte `?next=` (chemins internes uniquement, anti open-redirect) → redirige vers `/reset` après vérif du token recovery.
+  - `/reset` (protégé, session recovery requise) : nouveau mdp ×2, min 8, `updateUser({ password })` → /journal.
+  - Lien « Mot de passe oublié ? » sur /login.
+- **`emails/reset-password.html`** : template stylé La Forge (fond zinc, carte, bouton lime, wordmark LF), lien pattern SSR `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset`. À coller au dashboard (voir Config ci-dessus) — tant que ce n'est pas fait, l'email de reset partira avec le template Supabase par défaut (moche mais fonctionnel une fois Site URL configurée… en fait NON : sans template collé, le lien par défaut {{ .ConfirmationURL }} redirige vers Site URL — configurer la Site URL est le vrai prérequis).
+- Vérif modèles IA (question Synnheal) : `claude-haiku-4-5` partout (chat runtime + script de traduction one-shot), aucun autre modèle. ✅ ≤ 2 €/mois tenu.
 
 ### 2026-07-05 (fin de session) — EN LIGNE + dernières features
 - **Fix bloquant AI SDK v7** : les blocs system dans `messages` sont interdits (AI_InvalidPromptError) → migrés vers l'option `instructions` (array de SystemModelMessage, cache breakpoint conservé). Tous les appels IA étaient morts avant ce fix. Au passage : `streamHasError()` (lib/ui-stream.ts) pour ne plus afficher de faux « Enregistré ✓ » quand le flux contient une erreur (quick-add + comparateur).

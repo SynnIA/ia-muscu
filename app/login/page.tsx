@@ -91,9 +91,14 @@ function LoginForm() {
         {errorMsg && <p className="text-center text-sm text-red-400">{errorMsg}</p>}
       </form>
 
-      <Link href="/setup" className="text-xs text-zinc-500 underline-offset-4 hover:text-zinc-300 hover:underline">
-        Première fois ? Créer le compte
-      </Link>
+      <div className="flex flex-col items-center gap-2">
+        <Link href="/forgot" className="text-xs text-zinc-500 underline-offset-4 hover:text-zinc-300 hover:underline">
+          Mot de passe oublié ?
+        </Link>
+        <Link href="/setup" className="text-xs text-zinc-500 underline-offset-4 hover:text-zinc-300 hover:underline">
+          Première fois ? Créer le compte
+        </Link>
+      </div>
     </main>
   );
 }

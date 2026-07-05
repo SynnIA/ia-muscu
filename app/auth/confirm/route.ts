@@ -12,15 +12,19 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code");
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
+  // Destination post-vérification (ex. /reset pour un recovery) — chemins internes only
+  const nextParam = searchParams.get("next");
+  const next =
+    nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/chat";
 
   const supabase = await createClient();
 
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) redirect("/chat");
+    if (!error) redirect(next);
   } else if (token_hash && type) {
     const { error } = await supabase.auth.verifyOtp({ type, token_hash });
-    if (!error) redirect("/chat");
+    if (!error) redirect(next);
   }
 
   redirect("/login?error=lien-invalide");
