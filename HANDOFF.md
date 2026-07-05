@@ -1,6 +1,18 @@
 # HANDOFF — IA-Muscu (« La Forge »)
 
+## 🚀 PRODUCTION : https://ia-muscu.vercel.app (depuis le 2026-07-05)
+
 ## Changelog
+
+### 2026-07-05 (fin de session) — EN LIGNE + dernières features
+- **Fix bloquant AI SDK v7** : les blocs system dans `messages` sont interdits (AI_InvalidPromptError) → migrés vers l'option `instructions` (array de SystemModelMessage, cache breakpoint conservé). Tous les appels IA étaient morts avant ce fix. Au passage : `streamHasError()` (lib/ui-stream.ts) pour ne plus afficher de faux « Enregistré ✓ » quand le flux contient une erreur (quick-add + comparateur).
+- **« Vue sur tout » du coach** (demande Synnheal : « il voit TOUT sur 3-4 mois ») : `lib/ai/summary.ts` → état des lieux chiffré calculé par le code (poids 120 j : départ/actuel/delta/kg-par-semaine, moyennes kcal+prot 30 j, séances/sem + progression 1RM par exo 90 j — première vs dernière séance, cardio 30 j, photos, objectif, faits), injecté dans le bloc system volatil à CHAQUE message en mode Question (~500 tokens ≈ 0,3 €/mois). Le prompt dit au coach de s'appuyer dessus d'office.
+- **Mini-calendrier journal** : tap sur la date du header → grille du mois (points lime = jours avec données, ‹ › entre mois, 100 % serveur, param `?cal=1`). `components/journal/month-calendar.tsx`.
+- **Pagination exos** : bouton « Afficher plus » (+40, max 400, param `?n=`).
+- **Git/GitHub** : ⚠️ le dossier n'avait PAS de repo propre (le « repo » vu par git = `/mnt/c/Users/Synnheal` entier avec `.gitignore: *`). → `git init -b main` dans le projet, 2 commits, **repo privé https://github.com/SynnIA/ia-muscu** (compte gh : SynnIA). `.gitignore` : `.env*` exclu, `!certs/supabase-ca.pem` forcé (CA publique requise par db-migrate), `/logs/` exclu.
+- **Vercel** : projet `ia-muscu` (compte synnheal-5649 / synnheals-projects), **connecté au repo GitHub → auto-deploy sur push main**. 5 env vars production posées via CLI (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SECRET_KEY, ANTHROPIC_API_KEY, ALLOWED_EMAIL — SUPABASE_DB_PASSWORD volontairement PAS envoyée, migrations = local only). Build prod 51 s, Ready. Smoke : /login 200, /api/chat 401 sans auth, manifest 200. Pas de config Supabase URL nécessaire (auth = signInWithPassword, zéro redirect email).
+- **Décisions dernière salve de questions** : pas de notifications push, pas d'offline (PWA online-only), mini-calendrier oui, GitHub+Vercel oui.
+- **Reste (optionnel, non bloquant)** : test complet en prod par Synnheal (login, Info/Question, photos, comparateur) ; installer la PWA sur le tel (Safari/Chrome → Ajouter à l'écran d'accueil sur https://ia-muscu.vercel.app) ; ⚠️ piège dev WSL : cache `.next` corrompu sur /mnt/c → `rm -rf .next` si « Parsing CSS failed ».
 
 ### 2026-07-05 (suite) — P6a+P6b+P6c IMPLÉMENTÉS (même session)
 - **P6a Mode Info/Question** :
