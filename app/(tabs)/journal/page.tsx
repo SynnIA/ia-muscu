@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/db/server";
 import { signedPhotoUrls } from "@/lib/photos/storage";
-import { formatDayLong, parisDayRange, shiftDay, todayParis } from "@/lib/dates";
+import { parisDayRange, shiftDay, todayParis } from "@/lib/dates";
 import QuickAdd from "@/components/journal/quick-add";
 import LogoutButton from "@/components/journal/logout-button";
-import MonthCalendar from "@/components/journal/month-calendar";
+import DateHeader from "@/components/journal/date-header";
 
 type SetRow = {
   exercise_name: string;
@@ -26,7 +26,7 @@ type SetRow = {
 export default async function JournalPage({
   searchParams,
 }: {
-  searchParams: Promise<{ d?: string; cal?: string }>;
+  searchParams: Promise<{ d?: string }>;
 }) {
   const supabase = await createClient();
   const {
@@ -35,9 +35,8 @@ export default async function JournalPage({
   if (!user) redirect("/login");
 
   const today = todayParis();
-  const { d, cal } = await searchParams;
+  const { d } = await searchParams;
   const day = /^\d{4}-\d{2}-\d{2}$/.test(d ?? "") ? d! : today;
-  const calOpen = cal === "1";
   const { start, end } = parisDayRange(day);
 
   // Toutes les données du jour (RLS = uniquement les siennes)
@@ -77,44 +76,6 @@ export default async function JournalPage({
   const mealPhotoUrls = await signedPhotoUrls(
     meals.map((m) => m.photo_url).filter((p): p is string => !!p)
   );
-
-  // Calendrier du mois : jours ayant au moins une donnée (calculé seulement si ouvert)
-  let filledDays: string[] = [];
-  if (calOpen) {
-    const [yy, mm] = day.split("-").map(Number);
-    const monthFirst = `${yy}-${String(mm).padStart(2, "0")}-01`;
-    const nextMonthFirst =
-      mm === 12 ? `${yy + 1}-01-01` : `${yy}-${String(mm + 1).padStart(2, "0")}-01`;
-    const mStart = parisDayRange(monthFirst).start;
-    const mEnd = parisDayRange(nextMonthFirst).start;
-    const dayParis = (iso: string) =>
-      new Date(iso).toLocaleDateString("fr-CA", { timeZone: "Europe/Paris" });
-
-    const [bm, ml, wk, ac] = await Promise.all([
-      supabase
-        .from("body_metrics")
-        .select("measured_at")
-        .gte("measured_at", monthFirst)
-        .lt("measured_at", nextMonthFirst),
-      supabase.from("meals").select("eaten_at").gte("eaten_at", mStart).lt("eaten_at", mEnd),
-      supabase
-        .from("workouts")
-        .select("occurred_at")
-        .gte("occurred_at", mStart)
-        .lt("occurred_at", mEnd),
-      supabase
-        .from("activities")
-        .select("occurred_at")
-        .gte("occurred_at", mStart)
-        .lt("occurred_at", mEnd),
-    ]);
-    const s = new Set<string>();
-    for (const r of bm.data ?? []) s.add(r.measured_at as string);
-    for (const r of ml.data ?? []) s.add(dayParis(r.eaten_at as string));
-    for (const r of wk.data ?? []) s.add(dayParis(r.occurred_at as string));
-    for (const r of ac.data ?? []) s.add(dayParis(r.occurred_at as string));
-    filledDays = [...s];
-  }
 
   // Totaux du jour — calculés par le CODE
   const r1 = (n: number) => Math.round(n * 10) / 10;
@@ -173,20 +134,7 @@ export default async function JournalPage({
             <ChevronLeft className="size-6" />
           </Link>
           <div className="text-center">
-            <Link
-              href={calOpen ? `/journal?d=${day}` : `/journal?d=${day}&cal=1`}
-              className="block cursor-pointer"
-            >
-              <h1 className="display text-lg font-bold uppercase tracking-wide text-zinc-100">
-                {formatDayLong(day)}{" "}
-                <span className="text-xs text-zinc-500">{calOpen ? "▴" : "▾"}</span>
-              </h1>
-            </Link>
-            {day !== today && (
-              <Link href="/journal" className="text-xs text-lime-400">
-                Revenir à aujourd&apos;hui
-              </Link>
-            )}
+            <DateHeader day={day} today={today} />
           </div>
           <div className="flex items-center">
             <Link
@@ -202,15 +150,6 @@ export default async function JournalPage({
           </div>
         </div>
       </header>
-
-      {calOpen && (
-        <MonthCalendar
-          month={day.slice(0, 7)}
-          filledDays={filledDays}
-          currentDay={day}
-          today={today}
-        />
-      )}
 
       <div className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-4 pb-8">
 
