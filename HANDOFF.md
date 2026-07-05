@@ -10,6 +10,12 @@ Le projet `zmpwucqbzgylmzixjyqf` est hors org SYNN → inaccessible par l'agent.
 
 ## Changelog
 
+### 2026-07-05 (soir, suite) — Refonte UI « identité Forge » (skill ui-ux-pro-max)
+- Design system choisi : style athlétique bold, typo display **Barlow Condensed** (next/font, var `--font-barlow`) pour titres/chiffres/wordmark — le lime-400/zinc-950 reste la marque.
+- `globals.css` : classes signature — `.forge-bg` (halo braise radial + trame fine), `.display`, `.stat-number` (tabular-nums), `.glow-lime`, `.animate-rise` (entrée cartes), `.press` (enfoncement tactile) — toutes avec `prefers-reduced-motion`.
+- Écrans : login = hero de marque (wordmark XL + glow) ; journal = stat tiles gros chiffres + liseré lime + sections uppercase ; tab bar = pilule active + labels condensed ; chat = toggle iconé (NotebookPen/MessageCircleQuestion, plus d'emojis-icônes), empty state avec suggestions tapables (remplissent l'input + basculent le mode), tool chips lime, bulles animées ; photos = header/empty state/bouton Comparer stylés, poignée du comparateur lime avec ChevronsLeftRight ; exos = cartes hover/open lime ; forgot/reset assortis.
+- Vérifié : tsc + lint verts, screenshot Playwright mobile 390px du login ✓. Poussé → auto-deploy.
+
 ### 2026-07-05 (soir) — Flux « mot de passe oublié » + emails stylés
 - **Constat** : auth par mot de passe = aucun email au quotidien, MAIS aucun flux de récupération → mdp oublié = coincé. Corrigé :
   - `/forgot` (public, ajouté aux PUBLIC_PATHS du proxy) : `resetPasswordForEmail` avec redirectTo `/auth/confirm?next=/reset` ; message générique (ne révèle pas si l'email existe).
