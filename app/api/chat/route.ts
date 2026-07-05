@@ -7,6 +7,7 @@ import {
 } from "ai";
 import { createClient } from "@/lib/db/server";
 import { INFO_PROMPT, SYSTEM_PROMPT } from "@/lib/ai/prompt";
+import { buildUserSummary } from "@/lib/ai/summary";
 import { buildTools } from "@/lib/ai/tools";
 
 export const maxDuration = 60;
@@ -54,6 +55,9 @@ export async function POST(req: Request) {
     timeZone: "Europe/Paris",
   }).format(new Date());
 
+  // Mode Question : la « vue sur tout » — état des lieux 4 mois calculé par le code
+  const summary = infoMode ? "" : await buildUserSummary(supabase, user.id);
+
   const allTools = buildTools(supabase, user.id, { pendingImage });
   const tools = infoMode
     ? {
@@ -83,7 +87,7 @@ export async function POST(req: Request) {
       {
         // Bloc 2 — contexte volatil, APRÈS le point de cache.
         role: "system",
-        content: `Date du jour : ${today} (Europe/Paris).`,
+        content: `Date du jour : ${today} (Europe/Paris).${summary ? `\n\n${summary}` : ""}`,
       },
     ],
     messages: await convertToModelMessages(
