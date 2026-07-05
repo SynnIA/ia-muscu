@@ -70,9 +70,9 @@ export default async function ExercisesPage({
   const { data: exercises } = await query;
 
   return (
-    <div className="h-full overflow-y-auto overscroll-contain">
+    <div className="forge-bg h-full overflow-y-auto overscroll-contain">
       <div className="mx-auto flex max-w-2xl flex-col gap-3 px-4 py-4 pb-8">
-        <h1 className="flex items-center gap-2 font-semibold text-zinc-100">
+        <h1 className="display flex items-center gap-2 text-lg font-bold uppercase tracking-wide text-zinc-100">
           <Dumbbell className="size-5 text-lime-400" />
           Bibliothèque d&apos;exercices
         </h1>
@@ -115,7 +115,7 @@ export default async function ExercisesPage({
             </select>
             <button
               type="submit"
-              className="rounded-xl bg-lime-400 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-lime-300"
+              className="press display cursor-pointer rounded-xl bg-lime-400 px-4 py-2 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-lime-300"
             >
               OK
             </button>
@@ -134,7 +134,7 @@ export default async function ExercisesPage({
                 (ex.instructions_fr?.length ? ex.instructions_fr : ex.instructions) ?? [];
               return (
                 <li key={ex.id}>
-                  <details className="group rounded-2xl border border-zinc-800 bg-zinc-900/60 px-4 py-3">
+                  <details className="group rounded-2xl border border-zinc-800 bg-zinc-900/70 px-4 py-3 transition-colors duration-200 open:border-lime-400/30 hover:border-zinc-700">
                     <summary className="cursor-pointer list-none">
                       <span className="text-sm font-medium text-zinc-100">
                         {ex.name_fr ?? ex.name}

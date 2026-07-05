@@ -104,11 +104,13 @@ export default function PhotosView({ photos }: { photos: PhotoItem[] }) {
       : [null, null];
 
   return (
-    <div className="h-full overflow-y-auto overscroll-contain">
+    <div className="forge-bg h-full overflow-y-auto overscroll-contain">
       <header className="sticky top-0 z-10 border-b border-zinc-800/60 bg-zinc-950/90 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2.5">
           <div>
-            <h1 className="text-sm font-semibold text-zinc-100">Photos</h1>
+            <h1 className="display text-lg font-bold uppercase tracking-wide text-zinc-100">
+              Photos
+            </h1>
             <p className="text-[11px] text-zinc-500">
               Sélectionne 2 photos pour un avant/après
             </p>
@@ -177,12 +179,16 @@ export default function PhotosView({ photos }: { photos: PhotoItem[] }) {
         )}
 
         {photos.length === 0 && !uploadOpen && (
-          <div className="flex flex-col items-center gap-2 py-16 text-center">
-            <Camera className="size-8 text-zinc-700" />
-            <p className="text-sm text-zinc-400">Aucune photo pour l&apos;instant.</p>
-            <p className="max-w-xs text-xs text-zinc-500">
-              Ajoute des photos face / profil / dos régulièrement, et compare ton
-              évolution avec le curseur avant/après. 📈
+          <div className="animate-rise flex flex-col items-center gap-3 py-16 text-center">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-lime-400/10 ring-1 ring-lime-400/30">
+              <Camera className="size-7 text-lime-400" />
+            </div>
+            <p className="display text-xl font-bold uppercase tracking-wide text-zinc-200">
+              Ton évolution commence ici
+            </p>
+            <p className="max-w-xs text-xs leading-relaxed text-zinc-500">
+              Ajoute des photos face / profil / dos régulièrement, puis compare
+              deux dates avec le curseur avant/après.
             </p>
           </div>
         )}
@@ -235,7 +241,7 @@ export default function PhotosView({ photos }: { photos: PhotoItem[] }) {
             {selected.length === 2 && (
               <button
                 onClick={() => setCompareOpen(true)}
-                className="flex items-center gap-2 rounded-xl bg-lime-400 px-4 py-2.5 text-sm font-medium text-zinc-950 transition hover:bg-lime-300"
+                className="press glow-lime display flex cursor-pointer items-center gap-2 rounded-xl bg-lime-400 px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-lime-300"
               >
                 <GitCompareArrows className="size-4" /> Comparer
               </button>

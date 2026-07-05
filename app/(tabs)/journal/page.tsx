@@ -161,23 +161,23 @@ export default async function JournalPage({
   }
 
   return (
-    <div className="h-full overflow-y-auto overscroll-contain">
+    <div className="forge-bg h-full overflow-y-auto overscroll-contain">
       {/* Navigation par jour — collante en haut */}
       <header className="sticky top-0 z-10 border-b border-zinc-800/60 bg-zinc-950/90 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-2 py-1.5">
           <Link
             href={`/journal?d=${shiftDay(day, -1)}`}
             aria-label="Jour précédent"
-            className="flex size-11 items-center justify-center rounded-xl text-zinc-400 active:bg-zinc-900"
+            className="press flex size-11 cursor-pointer items-center justify-center rounded-xl text-zinc-400 active:bg-zinc-900"
           >
             <ChevronLeft className="size-6" />
           </Link>
           <div className="text-center">
             <Link
               href={calOpen ? `/journal?d=${day}` : `/journal?d=${day}&cal=1`}
-              className="block"
+              className="block cursor-pointer"
             >
-              <h1 className="text-sm font-semibold capitalize text-zinc-100">
+              <h1 className="display text-lg font-bold uppercase tracking-wide text-zinc-100">
                 {formatDayLong(day)}{" "}
                 <span className="text-xs text-zinc-500">{calOpen ? "▴" : "▾"}</span>
               </h1>
@@ -214,21 +214,30 @@ export default async function JournalPage({
 
       <div className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-4 pb-8">
 
-        {/* Totaux du jour */}
-        <div className="grid grid-cols-4 gap-2">
+        {/* Totaux du jour — stat tiles */}
+        <div className="animate-rise grid grid-cols-4 gap-2">
           {[
             { label: "kcal", value: totKcal, Icon: Flame },
-            { label: "prot (g)", value: totProt, Icon: UtensilsCrossed },
-            { label: "volume (kg)", value: totVolume, Icon: Dumbbell },
-            { label: "cardio (min)", value: totActivity, Icon: Activity },
+            { label: "prot·g", value: totProt, Icon: UtensilsCrossed },
+            { label: "vol·kg", value: totVolume, Icon: Dumbbell },
+            { label: "cardio·min", value: totActivity, Icon: Activity },
           ].map(({ label, value, Icon }) => (
             <div
               key={label}
-              className="flex flex-col items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-900/60 px-2 py-3"
+              className="relative flex flex-col items-center gap-1 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/70 px-1 pb-2.5 pt-3"
             >
+              <span className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-lime-400/60 to-transparent" />
               <Icon className="size-4 text-lime-400" />
-              <span className="text-base font-semibold text-zinc-100">{value || "—"}</span>
-              <span className="text-[10px] text-zinc-500">{label}</span>
+              <span
+                className={`stat-number text-2xl font-bold leading-none ${
+                  value ? "text-zinc-50" : "text-zinc-600"
+                }`}
+              >
+                {value || "—"}
+              </span>
+              <span className="display text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                {label}
+              </span>
             </div>
           ))}
         </div>
@@ -244,8 +253,8 @@ export default async function JournalPage({
 
         {/* Poids */}
         {weight && (
-          <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-            <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
+          <section className="animate-rise rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
+            <h2 className="display mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400">
               <Scale className="size-4 text-lime-400" /> Poids
             </h2>
             <p className="text-sm text-zinc-100">
@@ -260,8 +269,8 @@ export default async function JournalPage({
 
         {/* Séances */}
         {workouts.map((w) => (
-          <section key={w.id} className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-            <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
+          <section key={w.id} className="animate-rise rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
+            <h2 className="display mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400">
               <Dumbbell className="size-4 text-lime-400" />
               {w.name || "Séance"}
               <span className="ml-auto text-xs font-normal text-zinc-500">
@@ -282,8 +291,8 @@ export default async function JournalPage({
 
         {/* Repas */}
         {meals.length > 0 && (
-          <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-            <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
+          <section className="animate-rise rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
+            <h2 className="display mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400">
               <UtensilsCrossed className="size-4 text-lime-400" /> Repas
             </h2>
             <ul className="flex flex-col gap-2">
@@ -320,8 +329,8 @@ export default async function JournalPage({
 
         {/* Activités */}
         {activities.length > 0 && (
-          <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-            <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-300">
+          <section className="animate-rise rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4">
+            <h2 className="display mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400">
               <Activity className="size-4 text-lime-400" /> Cardio / activités
             </h2>
             <ul className="flex flex-col gap-1.5">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Sparkles, X } from "lucide-react";
+import { ChevronsLeftRight, Loader2, Sparkles, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { resizeToDataUrl } from "@/lib/images";
 import { extractStreamText, streamHasError } from "@/lib/ui-stream";
@@ -93,7 +93,7 @@ export default function CompareSlider({
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-zinc-950 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       <header className="flex items-center justify-between px-4 py-3">
-        <h2 className="text-sm font-semibold text-zinc-100">
+        <h2 className="display text-lg font-bold uppercase tracking-wide text-zinc-100">
           Avant / après <span className="text-zinc-500">· {before.pose}</span>
         </h2>
         <button
@@ -141,8 +141,8 @@ export default function CompareSlider({
               className="absolute inset-y-0 w-0.5 bg-white/80"
               style={{ left: `${pos}%` }}
             >
-              <div className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-sm font-semibold text-zinc-900 shadow-lg">
-                ⇄
+              <div className="glow-lime absolute left-1/2 top-1/2 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-lime-400 text-zinc-950 shadow-lg">
+                <ChevronsLeftRight className="size-5" strokeWidth={2.5} />
               </div>
             </div>
             <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white">

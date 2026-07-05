@@ -23,12 +23,14 @@ export default function ForgotPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-8 bg-zinc-950 px-6">
-      <div className="flex flex-col items-center gap-3">
+    <main className="forge-bg flex min-h-dvh flex-col items-center justify-center gap-8 px-6">
+      <div className="animate-rise flex flex-col items-center gap-3">
         <div className="flex size-16 items-center justify-center rounded-2xl bg-lime-400/10 ring-1 ring-lime-400/30">
           <KeyRound className="size-8 text-lime-400" />
         </div>
-        <h1 className="text-2xl font-bold text-zinc-50">Mot de passe oublié</h1>
+        <h1 className="display text-3xl font-bold uppercase tracking-wide text-zinc-50">
+          Mot de passe oublié
+        </h1>
         <p className="max-w-xs text-center text-sm text-zinc-400">
           Donne ton email : si un compte existe, tu recevras un lien pour en
           forger un nouveau. 🔧

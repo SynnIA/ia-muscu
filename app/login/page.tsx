@@ -41,13 +41,19 @@ function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-8 bg-zinc-950 px-6">
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex size-16 items-center justify-center rounded-2xl bg-lime-400/10 ring-1 ring-lime-400/30">
-          <Dumbbell className="size-8 text-lime-400" />
+    <main className="forge-bg flex min-h-dvh flex-col items-center justify-center gap-8 px-6">
+      <div className="animate-rise flex flex-col items-center gap-4">
+        <div className="glow-lime flex size-16 items-center justify-center rounded-2xl bg-lime-400 text-zinc-950">
+          <Dumbbell className="size-8" strokeWidth={2.5} />
         </div>
-        <h1 className="text-2xl font-bold text-zinc-50">La Forge</h1>
-        <p className="text-sm text-zinc-400">Ton coach muscu &amp; nutrition</p>
+        <div className="text-center">
+          <h1 className="display text-5xl font-extrabold uppercase tracking-wide text-zinc-50">
+            La&nbsp;Forge
+          </h1>
+          <p className="display mt-1 text-sm font-semibold uppercase tracking-[0.25em] text-lime-400/90">
+            Coach muscu &amp; nutrition
+          </p>
+        </div>
       </div>
 
       {info === "compte-cree" && (
@@ -83,7 +89,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={busy}
-          className="flex items-center justify-center gap-2 rounded-xl bg-lime-400 px-4 py-3 font-semibold text-zinc-950 transition hover:bg-lime-300 disabled:opacity-60"
+          className="press glow-lime display flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-lime-400 px-4 py-3 text-lg font-bold uppercase tracking-wide text-zinc-950 transition-colors hover:bg-lime-300 disabled:opacity-60"
         >
           {busy && <Loader2 className="size-4 animate-spin" />}
           Se connecter

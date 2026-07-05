@@ -6,7 +6,9 @@ import {
   Dumbbell,
   ImagePlus,
   LogOut,
+  MessageCircleQuestion,
   Mic,
+  NotebookPen,
   SendHorizontal,
   Volume2,
   VolumeX,
@@ -200,14 +202,16 @@ export default function Chat({
   }
 
   return (
-    <div className="flex h-full flex-col bg-zinc-950">
+    <div className="forge-bg flex h-full flex-col">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-zinc-800/80 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-lime-400/10 ring-1 ring-lime-400/30">
-            <Dumbbell className="size-4 text-lime-400" />
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-lime-400 text-zinc-950">
+            <Dumbbell className="size-4" strokeWidth={2.5} />
           </div>
-          <h1 className="font-semibold text-zinc-100">La Forge</h1>
+          <h1 className="display text-lg font-bold uppercase tracking-wide text-zinc-100">
+            La&nbsp;Forge
+          </h1>
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -232,12 +236,38 @@ export default function Chat({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4">
         {messages.length === 0 && (
-          <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
-            <p className="text-lg font-medium text-zinc-300">Salut ! 💪</p>
-            <p className="max-w-xs text-sm text-zinc-500">
-              Dis-moi ce que tu as fait aujourd&apos;hui, envoie une photo de
-              ton repas, ou demande ta séance du jour.
-            </p>
+          <div className="flex h-full flex-col items-center justify-center gap-5 text-center">
+            <div className="animate-rise flex flex-col items-center gap-3">
+              <div className="glow-lime flex size-14 items-center justify-center rounded-2xl bg-lime-400 text-zinc-950">
+                <Dumbbell className="size-7" strokeWidth={2.5} />
+              </div>
+              <p className="display text-2xl font-bold uppercase tracking-wide text-zinc-100">
+                Prêt à forger ?
+              </p>
+              <p className="max-w-xs text-sm text-zinc-500">
+                Raconte ta journée en mode Info, ou pose une question à ton
+                coach.
+              </p>
+            </div>
+            <div className="animate-rise flex max-w-sm flex-wrap justify-center gap-2">
+              {[
+                { text: "Je fais quoi aujourd'hui ?", m: "question" as const },
+                { text: "Bilan de ma semaine", m: "question" as const },
+                { text: "Poids du jour : ", m: "info" as const },
+              ].map(({ text, m }) => (
+                <button
+                  key={text}
+                  type="button"
+                  onClick={() => {
+                    switchMode(m);
+                    setInput(text);
+                  }}
+                  className="press cursor-pointer rounded-full border border-zinc-800 bg-zinc-900 px-3.5 py-2 text-xs text-zinc-300 hover:border-lime-400/40 hover:text-lime-300"
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -247,8 +277,8 @@ export default function Chat({
               key={message.id}
               className={
                 message.role === "user"
-                  ? "self-end max-w-[85%] rounded-2xl rounded-br-md bg-lime-400 px-4 py-2.5 text-sm text-zinc-950"
-                  : "self-start max-w-[85%] rounded-2xl rounded-bl-md bg-zinc-900 px-4 py-2.5 text-sm text-zinc-100 ring-1 ring-zinc-800"
+                  ? "animate-rise self-end max-w-[85%] rounded-2xl rounded-br-md bg-lime-400 px-4 py-2.5 text-sm font-medium text-zinc-950"
+                  : "animate-rise self-start max-w-[85%] rounded-2xl rounded-bl-md border border-zinc-800 bg-zinc-900/90 px-4 py-2.5 text-sm leading-relaxed text-zinc-100"
               }
             >
               {message.parts.map((part, i) => {
@@ -286,7 +316,7 @@ export default function Chat({
                   return (
                     <span
                       key={i}
-                      className="my-1 flex w-fit items-center gap-1.5 rounded-full bg-zinc-800/80 px-2.5 py-1 text-xs text-zinc-400"
+                      className="display my-1 flex w-fit items-center gap-1.5 rounded-full border border-lime-400/20 bg-lime-400/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-lime-300/80"
                     >
                       <Wrench className="size-3" />
                       {TOOL_LABELS[toolName] ?? toolName}
@@ -324,24 +354,26 @@ export default function Chat({
         className="border-t border-zinc-800/80 px-4 py-3"
       >
         {/* Toggle Info / Question — Info = log éclair pas cher, Question = vrai coach */}
-        <div className="mx-auto mb-2 flex max-w-2xl items-center gap-2">
-          <div className="flex rounded-xl border border-zinc-800 bg-zinc-900 p-0.5">
+        <div className="mx-auto mb-2 flex max-w-2xl items-center gap-2.5">
+          <div className="flex rounded-full border border-zinc-800 bg-zinc-900 p-0.5">
             {(
               [
-                ["info", "📝 Info"],
-                ["question", "💬 Question"],
+                ["info", "Info", NotebookPen],
+                ["question", "Question", MessageCircleQuestion],
               ] as const
-            ).map(([m, label]) => (
+            ).map(([m, label, Icon]) => (
               <button
                 key={m}
                 type="button"
                 onClick={() => switchMode(m)}
-                className={`rounded-[10px] px-3 py-1.5 text-xs transition ${
+                aria-pressed={mode === m}
+                className={`press display flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide transition-colors duration-200 ${
                   mode === m
-                    ? "bg-lime-400 font-medium text-zinc-950"
+                    ? "bg-lime-400 text-zinc-950"
                     : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
+                <Icon className="size-3.5" />
                 {label}
               </button>
             ))}
@@ -415,7 +447,7 @@ export default function Chat({
             type="submit"
             disabled={busy || (!input.trim() && !pendingImage)}
             aria-label="Envoyer"
-            className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-lime-400 text-zinc-950 transition hover:bg-lime-300 disabled:opacity-40"
+            className="press glow-lime flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-xl bg-lime-400 text-zinc-950 transition-colors hover:bg-lime-300 disabled:opacity-40"
           >
             <SendHorizontal className="size-5" />
           </button>
