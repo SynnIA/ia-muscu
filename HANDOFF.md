@@ -10,6 +10,17 @@ Le projet `zmpwucqbzgylmzixjyqf` est hors org SYNN → inaccessible par l'agent.
 
 ## Changelog
 
+### 2026-07-05 (nuit) — Calendrier instantané + fin de session
+- **Plainte Synnheal : délai au tap sur la date du journal** → cause : le toggle calendrier était une navigation serveur (`?cal=1`, rechargement + 4 requêtes). Remplacé par :
+  - `components/journal/date-header.tsx` (client) : dropdown calendrier à ouverture locale instantanée, jours remplis fetchés via **`/api/journal/days?month=YYYY-MM`** (nouvelle route) avec cache mémoire par mois, navigation ‹ › entre mois sans rechargement, tap extérieur/choix d'un jour = fermeture. Recentrage du mois au changement de jour via le pattern React « adjust state during render » (la règle lint `react-hooks/set-state-in-effect` refuse le useEffect).
+  - `app/(tabs)/journal/loading.tsx` : skeleton → feedback immédiat sur les changements de jour.
+  - `components/journal/month-calendar.tsx` SUPPRIMÉ (remplacé), param `?cal=` disparu.
+- **État fin de session** : tout est poussé (main = prod auto-déployée), build+lint+tsc verts, serveur dev local ARRÊTÉ.
+- **Reprise — reste à faire** :
+  1. Synnheal : recréer le compte via /setup (l'ancien a été supprimé à sa demande), test complet prod (Info/Question, photos, comparateur, avis coach, calendrier).
+  2. Synnheal : config Supabase Dashboard (voir section ⚙️ ci-dessous : Site URL + template email reset).
+  3. Idées en attente si demandées : thème clair, anneaux de progression sur les stat tiles (nécessite objectifs), suppression du projet Supabase doublon `qpdsjvpjebgfrmbblgav`.
+
 ### 2026-07-05 (soir, suite) — Refonte UI « identité Forge » (skill ui-ux-pro-max)
 - Design system choisi : style athlétique bold, typo display **Barlow Condensed** (next/font, var `--font-barlow`) pour titres/chiffres/wordmark — le lime-400/zinc-950 reste la marque.
 - `globals.css` : classes signature — `.forge-bg` (halo braise radial + trame fine), `.display`, `.stat-number` (tabular-nums), `.glow-lime`, `.animate-rise` (entrée cartes), `.press` (enfoncement tactile) — toutes avec `prefers-reduced-motion`.
