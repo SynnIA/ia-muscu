@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔥 La Forge — coach musculation & nutrition IA
 
-## Getting Started
+Webapp PWA **mono-utilisateur** de coaching muscu + nutrition. Une IA pas chère (Claude Haiku 4.5) discute, lit les photos (repas, captures Strava, physique) et mémorise tout — **le LLM parle, le code calcule** (TDEE, macros, 1RM, totaux, graphiques).
 
-First, run the development server:
+**Prod : https://ia-muscu.vercel.app** (auto-deploy à chaque push sur `main`).
+
+## Fonctionnalités
+
+- **📅 Journal** — vue par jour (totaux kcal/prot/volume/cardio calculés par le code), saisie rapide en langage naturel, mini-calendrier du mois, miniatures des photos de repas.
+- **💬 Coach** — chat à 2 modes :
+  - **📝 Info** : log éclair (« 4×8 squat à 80 kg ») → prompt minimal, ~0,001 $/log, réponse en 1 phrase ;
+  - **💬 Question** : coach complet (ton « pote de salle »), avec un **état des lieux chiffré sur 4 mois** injecté à chaque message (poids, moyennes nutrition, progression 1RM…) calculé par `lib/ai/summary.ts`.
+  - Vision (photo de repas → macros CIQUAL, capture Strava → activité), graphiques Recharts inline, dictée + lecture vocale (Web Speech, gratuit).
+- **🏋️ Exos** — 873 exercices (Free Exercise DB) traduits FR, filtres muscle/matériel, images.
+- **📸 Photos** — photos de physique par pose (face/profil/dos), **comparateur avant/après à curseur**, avis du coach à la demande. Bucket Supabase privé, URLs signées.
+
+## Stack
+
+Next.js 16 (App Router) · Supabase (Postgres + RLS, Auth, Storage) · Vercel AI SDK v7 + `claude-haiku-4-5` · Tailwind v4 · Recharts. Coût cible : **0 €/mois d'infra + ~2 €/mois d'IA** (prompt caching, calculs en code, données de référence en local).
+
+⚠️ AI SDK **v7** : les blocs system passent par l'option `instructions` — jamais dans `messages`.
+
+## Dev local
 
 ```bash
+npm install
+cp .env.example .env.local   # voir variables ci-dessous
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Variables (`.env.local`) : `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SECRET_KEY` (server-only), `ANTHROPIC_API_KEY`, `ALLOWED_EMAIL` (garde mono-utilisateur), `SUPABASE_DB_PASSWORD` (migrations locales uniquement).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Scripts :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+node scripts/db-migrate.mjs      # migrations SQL (pooler IPv4 + CA certs/supabase-ca.pem)
+node scripts/setup-storage.mjs   # bucket privé `photos` (idempotent)
+node scripts/seed-ciqual.mjs     # 3 186 aliments CIQUAL (ANSES)
+node scripts/seed-exercises.mjs  # 873 exercices Free Exercise DB
+```
 
-## Learn More
+Pièges WSL sur `/mnt/c` : cache `.next` qui se corrompt (`rm -rf .next`), tuer le dev server avec `pkill -f "[n]ext dev"`.
 
-To learn more about Next.js, take a look at the following resources:
+## Docs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `PLAN.md` — spec complète d'origine (schéma DB, tools, formules, lots P0→P5)
+- `HANDOFF.md` — changelog de construction et état courant
+- `CLAUDE.md` — règles pour l'agent de code
