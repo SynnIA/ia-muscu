@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: #09090b; /* zinc-950 */
+  color: #fafafa;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none; /* pas de pull-to-refresh accidentel en mode app */
+}
+
+/* Tactile : supprime le délai de double-tap et le zoom involontaire */
+button,
+a,
+input,
+select,
+textarea,
+summary {
+  touch-action: manipulation;
+}
+
+/* iOS zoome sur tout champ < 16px : on garantit 16px sur mobile */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+@media (min-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 14px;
+  }
+}
