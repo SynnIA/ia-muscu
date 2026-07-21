@@ -21,16 +21,6 @@ plusieurs mois — pour **~2 €/mois** d'IA.
 
 ---
 
-## 📸 Aperçu
-
-> _Captures à venir — déposer les fichiers dans [`docs/screenshots/`](docs/screenshots/) (voir la note du dossier)._
-
-|            📅 Journal            |            💬 Coach            |          📸 Photos          |
-| :------------------------------: | :---------------------------: | :-------------------------: |
-| ![Journal](docs/screenshots/journal.png) | ![Coach](docs/screenshots/coach.png) | ![Photos](docs/screenshots/photos.png) |
-
----
-
 ## La genèse
 
 Je voulais un coach de muscu et de nutrition qui me suive vraiment : qui se souvienne
