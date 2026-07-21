@@ -2,177 +2,184 @@
 
 # 🔥 La Forge
 
-### Coach musculation & nutrition IA — *le LLM parle, le code calcule.*
+### AI training & nutrition coach — *the LLM talks, the code calculates.*
 
-[![En prod](https://img.shields.io/badge/statut-en%20prod-success?style=flat-square)](https://ia-muscu.vercel.app)
+**English** · [🇫🇷 Français](README.fr.md)
+
+[![In prod](https://img.shields.io/badge/status-in%20prod-FF3D00?style=flat-square)](https://ia-muscu.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20RLS-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
 [![Vercel AI SDK](https://img.shields.io/badge/Vercel%20AI%20SDK-v7-000000?style=flat-square&logo=vercel&logoColor=white)](https://sdk.vercel.ai)
 [![Claude Haiku 4.5](https://img.shields.io/badge/Claude-Haiku%204.5-D97757?style=flat-square&logo=anthropic&logoColor=white)](https://www.anthropic.com)
 [![Tailwind](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-**▶ En ligne : [ia-muscu.vercel.app](https://ia-muscu.vercel.app)**
+**▶ Live: [ia-muscu.vercel.app](https://ia-muscu.vercel.app)**
 
-PWA mono-utilisateur qui journalise entraînements et nutrition en langage naturel,
-lit les photos (repas, physique, captures d'activité) et suit la progression sur
-plusieurs mois — pour **~2 €/mois** d'IA.
+A single-user PWA that logs workouts and nutrition in natural language,
+reads photos (meals, physique, activity screenshots) and tracks progress
+over months — for **~€2/month** of AI.
 
 </div>
 
 ---
 
-## La genèse
+## 📖 The story
 
-Je voulais un coach de muscu et de nutrition qui me suive vraiment : qui se souvienne
-de mes séances, calcule mes besoins, lise la photo de mon assiette et me dise où j'en
-suis. Les apps du marché sont soit des tableurs déguisés, soit des abonnements à
-10-20 €/mois. Objectif : **le faire moi-même pour le prix d'un café par mois.**
+I wanted a training & nutrition coach that would actually follow me: remember my
+sessions, compute my needs, read a photo of my plate and tell me where I stand.
+Market apps are either glorified spreadsheets or €10–20/month subscriptions.
+Goal: **build it myself for the price of one coffee a month.**
 
-Sauf qu'un LLM, quand on lui demande « combien de calories dans ce repas » ou « quel
-est mon 1RM », **invente des chiffres plausibles mais faux**. Il additionne mal, arrondit
-au hasard, « hallucine » un TDEE. Inacceptable pour un outil de suivi où le chiffre
-*est* le produit.
+Except that when you ask an LLM "how many calories in this meal" or "what's my 1RM",
+it **invents plausible-but-wrong numbers**. It adds badly, rounds randomly,
+"hallucinates" a TDEE. Unacceptable for a tracking tool where the number *is* the product.
 
-D'où le principe qui structure tout le projet :
+Hence the principle that structures the whole project:
 
-> ### 🗣️ Le LLM parle. 🧮 Le code calcule.
+> ### 🗣️ The LLM talks. 🧮 The code calculates.
 >
-> Le modèle comprend le langage naturel, décide **quoi** faire et rédige la réponse.
-> Mais chaque nombre — calories, macros, TDEE, 1RM, volume, points d'un graphique —
-> sort d'une **fonction TypeScript déterministe et testable à la main**, exposée au
-> modèle comme *tool*. L'IA ne fait jamais une addition qui compte.
+> The model understands natural language, decides **what** to do and writes the answer.
+> But every number — calories, macros, TDEE, 1RM, volume, chart points — comes from a
+> **deterministic, hand-testable TypeScript function**, exposed to the model as a *tool*.
+> The AI never performs an addition that matters.
 
-Résultat : la conversation est fluide *et* les chiffres sont exacts et reproductibles.
-
----
-
-## Ce que ça fait
-
-- **📅 Journal** — vue par jour : totaux kcal / protéines / volume / cardio **calculés par le code**, saisie rapide en langage naturel, mini-calendrier du mois, miniatures des photos de repas.
-- **💬 Coach** — chat à deux modes :
-  - **📝 Info** — log éclair (« 4×8 squat à 80 kg ») : prompt minimal, sous-ensemble de tools, réponse en une phrase. ~0,001 $ le log.
-  - **💬 Question** — coach complet (ton « pote de salle »), avec un **état des lieux chiffré sur 4 mois** (poids, moyennes nutrition, progression 1RM…) recalculé par le code et injecté à chaque message.
-  - **Vision** : photo de repas → macros CIQUAL ; capture d'activité → séance de cardio.
-  - **Graphiques Recharts inline** générés à la demande, sur données réelles.
-  - **Voix** : dictée + lecture (Web Speech API, gratuit).
-- **🏋️ Exos** — 873 exercices (Free Exercise DB) traduits en FR, filtres muscle / matériel / niveau, images.
-- **📸 Photos** — clichés de physique par pose (face / profil / dos), **comparateur avant/après à curseur**, avis du coach à la demande. Bucket Supabase privé, URLs signées.
+Result: the conversation is fluid *and* the numbers are exact and reproducible.
 
 ---
 
-## Sous le capot
+## ✨ What it does
+
+- **📅 Journal** — day view: kcal / protein / volume / cardio totals **computed by code**, quick natural-language logging, mini month calendar, meal-photo thumbnails.
+- **💬 Coach** — two-mode chat:
+  - **📝 Info** — lightning log ("4×8 squat at 80 kg"): minimal prompt, reduced toolset, one-sentence reply. ~$0.001 per log.
+  - **💬 Question** — full coach (your "gym buddy"), with a **4-month numeric status report** (weight, nutrition averages, 1RM progression…) recomputed by code and injected into every message.
+  - **Vision**: meal photo → CIQUAL macros; activity screenshot → cardio session.
+  - **Inline Recharts charts** generated on demand, from real data.
+  - **Voice**: dictation + read-aloud (Web Speech API, free).
+- **🏋️ Exercises** — 873 exercises (Free Exercise DB) translated to French, muscle / equipment / level filters, images.
+- **📸 Photos** — physique shots by pose (front / side / back), **before/after slider comparator**, coach feedback on demand. Private Supabase bucket, signed URLs.
+
+---
+
+## 🧱 Under the hood
 
 ### Architecture
 
 ```
-app/            Next.js App Router — onglets (journal, chat, exos, photos), auth, API routes
-components/     UI React (chat, charts Recharts, comparateur photos, nav…)
+app/            Next.js App Router — tabs (journal, chat, exercises, photos), auth, API routes
+components/     React UI (chat, Recharts charts, photo comparator, nav…)
 lib/
- ├─ ai/         prompt (préfixe cachable) · summary (état des lieux 4 mois) · tools · knowledge (fiches ISSN/ANSES)
- ├─ calc/       energy.ts (BMR Mifflin-St Jeor, TDEE, macros) · strength.ts (1RM Epley/Brzycki, table %1RM)  ← le CODE calcule
- ├─ db/         clients Supabase : client (browser) · server (session/RLS) · admin (server-only, service key)
- ├─ food/       Open Food Facts (lookup code-barres, cache)
- └─ photos/     upload bucket privé + URLs signées
-supabase/migrations/   schéma SQL versionné (4 migrations : init, cache OFF, exos FR, photos)
-scripts/               migrations + seeds (CIQUAL, exercices, storage, traductions)
+ ├─ ai/         prompt (cacheable prefix) · summary (4-month status) · tools · knowledge (ISSN/ANSES sheets)
+ ├─ calc/       energy.ts (BMR Mifflin-St Jeor, TDEE, macros) · strength.ts (1RM Epley/Brzycki, %1RM table)  ← the CODE calculates
+ ├─ db/         Supabase clients: client (browser) · server (session/RLS) · admin (server-only, service key)
+ ├─ food/       Open Food Facts (barcode lookup, cache)
+ └─ photos/     private-bucket upload + signed URLs
+supabase/migrations/   versioned SQL schema (4 migrations: init, OFF cache, FR exercises, photos)
+scripts/               migrations + seeds (CIQUAL, exercises, storage, translations)
 ```
 
-### Le pattern « tools déterministes »
+### The "deterministic tools" pattern
 
-Le cœur du projet : **15 tools** exposés au modèle dans [`lib/ai/tools.ts`](lib/ai/tools.ts).
-Chacun valide ses entrées avec **Zod**, puis fait le travail en TypeScript — le modèle
-ne voit que le résultat calculé :
+The heart of the project: **15 tools** exposed to the model in [`lib/ai/tools.ts`](lib/ai/tools.ts).
+Each validates its inputs with **Zod**, then does the work in TypeScript — the model
+only ever sees the computed result:
 
-| Tool                    | Ce que le **code** garantit                                             |
+| Tool                    | What the **code** guarantees                                            |
 | ----------------------- | ----------------------------------------------------------------------- |
-| `log_meal`              | additionne les macros des aliments (le LLM ne somme jamais)             |
-| `log_workout`          | calcule le 1RM estimé de chaque série (moyenne Epley/Brzycki)          |
-| `calc_needs`            | BMR (Mifflin-St Jeor) → TDEE → cible calorique → macros (cadre ISSN)   |
-| `generate_chart`        | agrège les données réelles par jour et renvoie les points exacts        |
-| `search_food`           | recherche plein-texte FR dans CIQUAL (~3 186 aliments, ANSES)           |
-| `estimate_1rm`          | 1RM + table de charges %1RM (fiable 1-10 reps)                          |
-| `get_history` / `recall_facts` | relecture de l'historique et de la mémoire durable              |
+| `log_meal`              | sums the food macros (the LLM never adds)                               |
+| `log_workout`          | computes the estimated 1RM of every set (Epley/Brzycki average)         |
+| `calc_needs`            | BMR (Mifflin-St Jeor) → TDEE → calorie target → macros (ISSN framework) |
+| `generate_chart`        | aggregates real data by day and returns exact points                    |
+| `search_food`           | FR full-text search in CIQUAL (~3,186 foods, ANSES)                     |
+| `estimate_1rm`          | 1RM + %1RM load table (reliable 1–10 reps)                              |
+| `get_history` / `recall_facts` | history and durable-memory reads                                 |
 | …                       | `log_weight`, `log_activity`, `remember_fact`, `update_profile`, `search_exercise`, `lookup_barcode`, `get_knowledge` |
 
-### Choix techniques & compromis
+### Technical choices & trade-offs
 
-- **Claude Haiku 4.5** plutôt qu'un gros modèle : suffisant dès lors que les calculs sont sortis du LLM, et **~10× moins cher**. C'est ce qui rend la cible ~2 €/mois atteignable.
-- **Prompt caching** : le préfixe stable (system + fiches ISSN/ANSES) porte un breakpoint de cache Anthropic ; le contexte volatil (date, état des lieux) est placé **après**. Le mode 📝 Info coupe encore les coûts (dernier message seul, tools réduits, réponse ≤ 300 tokens).
-- **Sécurité RLS-first** : toutes les tables `user_*` sont filtrées par `user_id = auth.uid()`. Les tools passent par le **client Supabase de la session** → la RLS s'applique d'office. La clé service (`SUPABASE_SECRET_KEY`) reste **server-only** (`lib/db/admin.ts`), jamais côté client. Bucket photos **privé**, sans policy storage : tout passe par le client admin + URLs signées, après vérification d'auth + propriété.
-- **Données de référence en local** (CIQUAL, exercices) : pas d'appel API externe payant pour les macros → coût nul et résultats déterministes.
-- **AI SDK v7** : les blocs *system* passent par l'option `instructions` de `streamText` (jamais dans `messages`, sous peine de `AI_InvalidPromptError`).
-
----
-
-## État du projet
-
-**Honnêteté avant tout — c'est un projet perso assumé comme tel :**
-
-- ✅ **En production**, utilisé au quotidien : [ia-muscu.vercel.app](https://ia-muscu.vercel.app) (auto-deploy à chaque push sur `main`).
-- ✅ Build, lint et `tsc` **verts**. ~41 fichiers source TS/TSX, 4 migrations SQL, 6 scripts.
-- 🔒 **Mono-utilisateur par conception** : une garde `ALLOWED_EMAIL` bloque tout autre compte côté API. Le passage multi-utilisateur (quotas, onboarding, isolation renforcée) reste un chantier à part entière.
-- ⚠️ **0 test automatisé.** Le point faible réel. Les formules de `lib/calc/` (BMR, TDEE, macros, 1RM) sont pures et déterministes : ce sont les **premières candidates** à une suite de tests unitaires (Vitest), non encore écrite. Aucune CI pour l'instant.
-- 🧪 Validation aujourd'hui **manuelle**, en usage réel.
-
-### Chantiers restants
-
-1. **Tests** — Vitest sur `lib/calc/*` (facile, gros gain de confiance), puis sur les tools.
-2. **Multi-utilisateur** — débrider la garde `ALLOWED_EMAIL`, quotas de coût par compte, onboarding.
-3. **CI** — lint + tsc + tests sur PR.
-4. **Observabilité** — suivi du coût IA réel par requête.
+- **Claude Haiku 4.5** instead of a big model: sufficient once calculations are outside the LLM, and **~10× cheaper**. That's what makes the ~€2/month target reachable.
+- **Prompt caching**: the stable prefix (system + ISSN/ANSES sheets) carries an Anthropic cache breakpoint; volatile context (date, status report) goes **after** it. 📝 Info mode cuts costs further (last message only, reduced tools, ≤300-token replies).
+- **RLS-first security**: every `user_*` table is filtered by `user_id = auth.uid()`. Tools go through the **session Supabase client** → RLS applies by default. The service key (`SUPABASE_SECRET_KEY`) stays **server-only** (`lib/db/admin.ts`), never client-side. **Private** photo bucket with no storage policy: everything goes through the admin client + signed URLs, after auth + ownership checks.
+- **Reference data stored locally** (CIQUAL, exercises): no paid external API calls for macros → zero cost and deterministic results.
+- **AI SDK v7**: *system* blocks go through `streamText`'s `instructions` option (never in `messages`, on pain of `AI_InvalidPromptError`).
 
 ---
 
-## Lancer en local
+## 🚦 Project status
 
-> Prérequis : Node 20+, un projet **Supabase**, une clé **Anthropic**.
+**Honesty first — this is a personal project and owns it:**
+
+- ✅ **In production**, used daily: [ia-muscu.vercel.app](https://ia-muscu.vercel.app) (auto-deploy on every push to `main`).
+- ✅ Build, lint and `tsc` **green**. ~41 TS/TSX source files, 4 SQL migrations, 6 scripts.
+- 🔒 **Single-user by design**: an `ALLOWED_EMAIL` guard blocks any other account at the API level. Going multi-user (quotas, onboarding, hardened isolation) is a whole project of its own.
+- ⚠️ **0 automated tests.** The real weak point. The `lib/calc/` formulas (BMR, TDEE, macros, 1RM) are pure and deterministic: they are the **first candidates** for a unit-test suite (Vitest), not yet written. No CI for now.
+- 🧪 Validation is currently **manual**, through real-world use.
+
+### Remaining work
+
+1. **Tests** — Vitest on `lib/calc/*` (easy, big confidence gain), then on the tools.
+2. **Multi-user** — lift the `ALLOWED_EMAIL` guard, per-account cost quotas, onboarding.
+3. **CI** — lint + tsc + tests on PR.
+4. **Observability** — real AI cost tracking per request.
+
+---
+
+## 🚀 Run locally
+
+> Prerequisites: Node 20+, a **Supabase** project, an **Anthropic** key.
 
 ```bash
 npm install
-cp .env.example .env.local     # renseigner les variables ci-dessous
+cp .env.example .env.local     # fill in the variables below
 npm run dev                    # http://localhost:3000
 ```
 
-Scripts npm disponibles : `dev`, `build`, `start`, `lint` *(pas de `test` — voir « État »)*.
+Available npm scripts: `dev`, `build`, `start`, `lint` *(no `test` — see "Status")*.
 
-### Variables d'environnement (`.env.local`)
+### Environment variables (`.env.local`)
 
-> ⚠️ Valeurs **non fournies** ici. `.env.local` est gitignoré ; ne jamais committer de secret.
+> ⚠️ Values **not provided** here. `.env.local` is gitignored; never commit a secret.
 
-| Variable                        | Rôle                                                        |
+| Variable                        | Role                                                        |
 | ------------------------------- | ----------------------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | URL du projet Supabase (client)                             |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | clé publique anon Supabase (client)                         |
-| `SUPABASE_SECRET_KEY`           | clé service Supabase — **server-only**, jamais côté client  |
-| `ANTHROPIC_API_KEY`             | clé API Anthropic (Claude Haiku 4.5)                        |
-| `ALLOWED_EMAIL`                 | email autorisé — garde mono-utilisateur                     |
-| `SUPABASE_DB_PASSWORD`          | mot de passe DB — **migrations locales uniquement**         |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL (client)                               |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public anon key (client)                           |
+| `SUPABASE_SECRET_KEY`           | Supabase service key — **server-only**, never client-side   |
+| `ANTHROPIC_API_KEY`             | Anthropic API key (Claude Haiku 4.5)                        |
+| `ALLOWED_EMAIL`                 | allowed email — single-user guard                           |
+| `SUPABASE_DB_PASSWORD`          | DB password — **local migrations only**                     |
 
-### Initialiser la base
+### Initialise the database
 
 ```bash
-node scripts/db-migrate.mjs      # applique les migrations SQL (pooler IPv4 + CA épinglée certs/supabase-ca.pem)
-node scripts/setup-storage.mjs   # crée le bucket privé `photos` (idempotent)
-node scripts/seed-ciqual.mjs     # importe ~3 186 aliments CIQUAL (ANSES)
-node scripts/seed-exercises.mjs  # importe 873 exercices (Free Exercise DB), traduits FR
+node scripts/db-migrate.mjs      # applies SQL migrations (IPv4 pooler + pinned CA certs/supabase-ca.pem)
+node scripts/setup-storage.mjs   # creates the private `photos` bucket (idempotent)
+node scripts/seed-ciqual.mjs     # imports ~3,186 CIQUAL foods (ANSES)
+node scripts/seed-exercises.mjs  # imports 873 exercises (Free Exercise DB), FR-translated
 ```
 
-> **WSL / `/mnt/c`** : le cache `.next` se corrompt (`Parsing CSS failed` → `rm -rf .next`) ; tuer le dev server avec `pkill -f "[n]ext dev"` ; redémarrer après une édition serveur (hot-reload peu fiable).
+> **WSL / `/mnt/c`**: the `.next` cache gets corrupted (`Parsing CSS failed` → `rm -rf .next`); kill the dev server with `pkill -f "[n]ext dev"`; restart after a server-side edit (hot-reload unreliable).
 
 ---
 
-## Stack
+## 🧰 Stack
 
-**Next.js 16** (App Router) · **Supabase** (Postgres + RLS, Auth, Storage) · **Vercel AI SDK v7** + `claude-haiku-4-5` · **Tailwind v4** · **Recharts** · **Zod** · PWA · déploiement **Vercel**.
+**Next.js 16** (App Router) · **Supabase** (Postgres + RLS, Auth, Storage) · **Vercel AI SDK v7** + `claude-haiku-4-5` · **Tailwind v4** · **Recharts** · **Zod** · PWA · deployed on **Vercel**.
 
-## Docs internes
+## 📚 Internal docs
 
-- [`PLAN.md`](PLAN.md) — spec complète d'origine (schéma DB, tools, formules, lots P0→P5).
-- [`HANDOFF.md`](HANDOFF.md) — changelog de construction et état courant.
-- [`CLAUDE.md`](CLAUDE.md) — règles pour l'agent de code.
+- [`PLAN.md`](PLAN.md) — original full spec (DB schema, tools, formulas, P0→P5 batches).
+- [`HANDOFF.md`](HANDOFF.md) — build changelog and current state.
+- [`CLAUDE.md`](CLAUDE.md) — rules for the coding agent.
 
 ---
 
 <div align="center">
-<sub>Projet personnel — « le LLM parle, le code calcule ». Construit pour apprendre, utilisé pour de vrai.</sub>
+<sub>
+
+Built with care by <b><a href="https://nathanfernandes.fr">Nathan Fernandes</a></b> — Founder of SYNN-IA · Dijon, France
+
+🌐 <a href="https://nathanfernandes.fr">Portfolio</a> · 💼 <a href="https://www.linkedin.com/in/nathan-fernandes-a5793b377/">LinkedIn</a> · 🐙 <a href="https://github.com/SynnIA">GitHub</a>
+
+</sub>
 </div>
